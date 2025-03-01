@@ -2,7 +2,7 @@ package main
 
 import (
 	"net/http"
-	
+
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -31,7 +31,7 @@ func hello(c echo.Context) error {
 
 func healthHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]any{
-    "status" : "OK",
-    "code" : 200,
+		"status": "OK",
+		"code":   200,
 	})
 }
