@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -22,8 +23,18 @@ func TestHealthHandler(t *testing.T) {
 		t.Errorf("Expected status code %d, got %d", http.StatusOK, rec.Code)
 	}
 
-	expected := `{"status":"OK","code":200}`
-	if rec.Body.String() != expected {
-		t.Errorf("Expected response body %s, got %s", expected, rec.Body.String())
+	// Parse the response body
+	var response map[string]interface{}
+	if err := json.Unmarshal(rec.Body.Bytes(), &response); err != nil {
+		t.Fatalf("Failed to parse response body: %v", err)
+	}
+
+	// Check the values
+	if status, ok := response["status"].(string); !ok || status != "OK" {
+		t.Errorf("Expected status to be 'OK', got %v", response["status"])
+	}
+
+	if code, ok := response["code"].(float64); !ok || int(code) != 200 {
+		t.Errorf("Expected code to be 200, got %v", response["code"])
 	}
 }
